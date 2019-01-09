@@ -4,24 +4,33 @@
  * 2 - Obter o endereço do usuario pelo Id
  */
 
-function obterUsuario(callback) {
-    setTimeout(() => {
-        return callback(null, {
-            id: 1,
-            nome: 'Aladin',
-            dataNascimento: new Date()
-        })
-    }, 1000)
+//importamos um módulo interno do node.js
+const util = require('util');
+const obterEnderecoAsync = util.promisify(obterEndereco);
+
+function obterUsuario() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // return reject(new Error('deu ruim de verdade!'));
+            return resolve({
+                id: 1,
+                nome: 'Aladin',
+                dataNascimento: new Date()
+            })
+        }, 1000)
+    });
 
 }
 
-function obterTelefone(idUsuario, callback) {
-    setTimeout(() => {
-        return callback(null, {
-            telefone: '119002',
-            ddd: 11
-        })
-    }, 2000)
+function obterTelefone(idUsuario) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            return resolve({
+                telefone: '119002',
+                ddd: 11
+            })
+        }, 2000)
+    })
 }
 
 function obterEndereco(idUsuario, callback) {
@@ -33,34 +42,61 @@ function obterEndereco(idUsuario, callback) {
     }, 2000)
 }
 
-function resolverUsuario(erro, usuario) {
-    console.log('usuario: ', usuario);
-}
+const usuarioPromise = obterUsuario();
 
-obterUsuario((error, usuario) => {
-    // null || "" || 0 === false
-    if (error) {
-        console.log('Deu ruim em usuario', error);
-        return;
-    }
-
-    obterTelefone(usuario.id, (error1, telefone) => {
-        if (error1) {
-            console.log('Deu ruim em telefone', error);
-            return;
+usuarioPromise.then((usuario) => {
+    return obterTelefone(usuario.id).then(result => {
+        return {
+            usuario: {
+                nome: usuario.nome,
+                id: usuario.id
+            },
+            telefone: result
         }
-        obterEndereco(usuario.id, (error2, endereco) => {
-            if (error2) {
-                console.log('Deu ruim em endereco', error);
-                return;
-            }
-
-            console.log(`
-            Nome: ${usuario.nome},
-            Endereço: ${endereco.rua}, ${endereco.numero},
-            Telefone: (${telefone.ddd})${telefone.telefone}
-            `);
-            
-        });
-    });
+    })
+}).then(result => {
+    const endereco = obterEnderecoAsync(result.usuario.id);
+    return endereco.then(resolve => {
+        return {
+            usuario: result.usuario,
+            telefone: result.telefone,
+            endereco: resolve
+        }
+    })
+}).then(resolve => {
+    console.log(`
+        Nome: ${resolve.usuario.nome},
+        Endereço: ${resolve.endereco.rua}, ${resolve.endereco.numero},
+        Telefone: (${resolve.telefone.ddd})${resolve.telefone.telefone}
+    `);
+}).catch(error => {
+    console.error('Deu ruim', error);
 });
+
+// obterUsuario((error, usuario) => {
+//     // null || "" || 0 === false
+//     if (error) {
+//         console.log('Deu ruim em usuario', error);
+//         return;
+//     }
+
+//     obterTelefone(usuario.id, (error1, telefone) => {
+//         if (error1) {
+//             console.log('Deu ruim em telefone', error);
+//             return;
+//         }
+//         obterEndereco(usuario.id, (error2, endereco) => {
+//             if (error2) {
+//                 console.log('Deu ruim em endereco', error);
+//                 return;
+//             }
+
+//             console.log(`
+//             Nome: ${usuario.nome},
+//             Endereço: ${endereco.rua}, ${endereco.numero},
+//             Telefone: (${telefone.ddd})${telefone.telefone}
+//             `);
+
+//         });
+//     });
+// });
