@@ -21,6 +21,7 @@ async function main() {
         //     return pessoa.name;
         // })
         // const names = results.results.map(pessoa => pessoa.name);
+        
         const names = results.results.meuMap((pessoa, index) => `[${index}]${pessoa.name}`);
         console.log('names', names);
 
