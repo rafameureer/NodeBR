@@ -7,9 +7,13 @@ const DEFAULT_ITEM_CADASTRAR = {
 }
 
 describe('Suite de manipulação de Herois', () => {
-    it('deve cadastrar um heroi, usando arquivos', async () => {
+    it('deve pesquisar um heroi usando arquivos', async () => {
         const expected = DEFAULT_ITEM_CADASTRAR
-
         ok(null, expected)
-    })
+
+    });
+    // it('deve cadastrar um heroi, usando arquivos', async () => {
+    //     const expected = DEFAULT_ITEM_CADASTRAR
+    //     ok(null, expected)
+    // })
 });
