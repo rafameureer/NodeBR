@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "mocha": "^6.0.0"
+    "mocha": "^6.1.3"
+  },
+  "dependencies": {
+    "commander": "^2.20.0"
   }
 }
