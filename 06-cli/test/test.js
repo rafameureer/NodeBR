@@ -51,9 +51,9 @@ describe('Suite de manipulação de Herois', () => {
         const newData = {
             nome: 'Batman',
             poder: 'Dinheiro'
-        }
+        };
         await database.atualizar(DEFAULT_ITEM_ATUALIZAR.id, newData);
-        const [result] = await database.listar(DEFAULT_ITEM_ATUALIZAR.id)
+        const [result] = await database.listar(DEFAULT_ITEM_ATUALIZAR.id);
         deepEqual(result, expected);
     });
 });
